@@ -1,0 +1,11 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && apt-get install -yq curl && apt-get clean
+
+WORKDIR /app
+
+ADD tests/http_tests.sh /app/http_tests.sh
+
+RUN chmod +x /app/http_tests.sh
+RUN bash /app/http_tests.sh
+
