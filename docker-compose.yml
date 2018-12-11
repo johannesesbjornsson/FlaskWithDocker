@@ -6,6 +6,8 @@ services:
       - db
     ports:
       - "80:80"
+    environment:
+      - DATABASE=db
 
   db:
     image: mysql:5.7

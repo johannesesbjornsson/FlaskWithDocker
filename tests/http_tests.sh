@@ -1,10 +1,11 @@
 url="$(curl ident.me -s):80/products"
-response=$( curl -sL -w "%{http_code}\\n" ${url} -H "key:123" -o /dev/null ) 
 
+echo "Testing GET"
+response=$( curl -sL -w "%{http_code}\\n" ${url} -H "key:123" -o /dev/null ) 
 if [[ ${response} == 200 ]]; then
-  echo "Tests passed!"
+  echo "Test passed"
   exit 0
 else
-  echo "Tests failed!"
+  echo "Test failed!"
   exit 1
 fi
