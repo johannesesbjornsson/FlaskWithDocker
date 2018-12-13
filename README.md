@@ -3,11 +3,12 @@ on a verital machine with http traffic enabled
 docker version 18.06.1-ce  
 docker-compose version 1.21.2  
 
-START 
+START  
 sudo docker-compose build  
+sudo docker-compose up
 sudo docker-compose start  
 
-TESTS 
+TESTS   
 sudo docker-compose -f docker-compose.test.yml build  
 sudo docker-compose -f docker-compose.test.yml build  
   
