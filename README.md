@@ -1,16 +1,16 @@
-INSTALLING  
-UBUNTU  
-on a virtual machine with http traffic enabled  
-sudo apt-get update  
-sudo apt-get install python-dev python-pip git docker.io  
-docker --version  
-
-sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose  
-sudo chmod +x /usr/local/bin/docker-compose  
-docker-compose --version  
-docker version 18.06.1-ce  
-docker-compose version 1.21.2  
-
+Requirements:  
+docker  
+docker-compose  
+Installation guides:  
+Docker (Ubuntu): https://docs.docker.com/install/linux/docker-ce/ubuntu/  
+Docker (Debian): https://docs.docker.com/install/linux/docker-ce/debian/  
+Docker compose (Both): https://docs.docker.com/compose/install/  
+  
+Confirmed working on Ubuntu 18.04 LTS (Docker version 18.06.1-ce and docker-compose version 1.21.2)
+Confirmed working on Dembian 9 (Docker version 18.09.0, docker-compose version 1.23.1)
+  
+git clone https://github.com/johannesesbjornsson/FlaskWithDocker.git  
+cd FlaskWithDocker
 
 START  
 sudo docker-compose build  
