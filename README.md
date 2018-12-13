@@ -6,7 +6,7 @@ Docker (Ubuntu): https://docs.docker.com/install/linux/docker-ce/ubuntu/
 Docker (Debian): https://docs.docker.com/install/linux/docker-ce/debian/  
 Docker compose (Both): https://docs.docker.com/compose/install/  
   
-Confirmed working on Ubuntu 18.04 LTS (Docker version 18.06.1-ce and docker-compose version 1.21.2)
+Confirmed working on Ubuntu 18.04 LTS (Docker version 18.06.1-ce and docker-compose version 1.21.2)  
 Confirmed working on Dembian 9 (Docker version 18.09.0, docker-compose version 1.23.1)
   
 ### Get the code up and running ###
