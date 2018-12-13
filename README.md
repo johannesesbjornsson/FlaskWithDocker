@@ -1,6 +1,8 @@
 ### Requirements: ###
 docker  
 docker-compose  
+port 3306 free  
+
 ### Installation guides:  ###
 Docker (Ubuntu): https://docs.docker.com/install/linux/docker-ce/ubuntu/  
 Docker (Debian): https://docs.docker.com/install/linux/docker-ce/debian/  
