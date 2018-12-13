@@ -1,7 +1,16 @@
-INSTALL  
-on a verital machine with http traffic enabled 
+INSTALLING  
+UBUNTU  
+on a virtual machine with http traffic enabled  
+sudo apt-get update  
+sudo apt-get install python-dev python-pip git docker.io  
+docker --version  
+
+sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose  
+sudo chmod +x /usr/local/bin/docker-compose  
+docker-compose --version  
 docker version 18.06.1-ce  
 docker-compose version 1.21.2  
+
 
 START  
 sudo docker-compose build  
@@ -9,7 +18,6 @@ sudo docker-compose up
 sudo docker-compose start  
 
 TESTS   
-sudo docker-compose -f docker-compose.test.yml build  
 sudo docker-compose -f docker-compose.test.yml build  
   
 Adding food products: curl http://{id-address}:80/products -H 'Content-Type:application/json' -H 'key:123_food' -X PUT -d '{ "name" : "some_name", "tags" : ["This", "hey"],"billOfMaterials": {"carrots": {"quantity" : 20, "unit" : "kg" }, "stuff": {"quantity" : 20, "unit" : "kg" }}, "family" : "fam", "customer": "cust", "allergens": ["allergen_1", "allergen_2"]  }'  
