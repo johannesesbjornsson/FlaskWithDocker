@@ -7,12 +7,12 @@ import os
 def create_textile_product(name,colour,prod_range,tags,materials):
   if tags:
     tags = list(set(tags))
-    tags =  [str(val) for val in tags] 
+    tags =  [str(val) for val in tags]  # Converting to string
     tags_resp = validate_tags(list(tags))
   if materials:
-    material_resp = validate_materials(materials.keys())
+    material_resp = validate_materials(materials.keys())  # The keys of the dicionary are the material type, which needs to be validated
 
-  insert_stmt = {'textile': [{'ID': '','Prod_range' : prod_range, 'Colour' : colour }]}
+  insert_stmt = {'textile': [{'ID': '','Prod_range' : prod_range, 'Colour' : colour }]}  # Creating sql alchemy insert format for textile table
   product_tags = format_single_column_input_with_id('Tag',list(tags))
   if 'error' in product_tags:
     return {'error' : {'message' : 'tags must be a list of strings', 'code' : 422 }}
@@ -26,7 +26,7 @@ def create_textile_product(name,colour,prod_range,tags,materials):
     insert_stmt['product_materials'] =product_materials
   try:
     db = database.mysql() 
-    db.create_product(name,'food',insert_stmt)
+    db.create_product(name,'textile',insert_stmt)
     return {'response' : {'message' : 'Product added', 'code' : 201 }}
   except Exception as e:
     return {'error' : {'message' : 'Internal server error', 'code' : 500 }}
@@ -37,16 +37,16 @@ def create_textile_product(name,colour,prod_range,tags,materials):
 def create_food_product(name,customer,family,tags,materials,allergens):
   if tags:
     tags = list(set(tags))
-    tags =  [str(val) for val in tags] 
-    tags_resp = validate_tags(list(tags))
+    tags =  [str(val) for val in tags]  # Converting to string
+    tags_resp = validate_tags(list(tags))  
   if materials:
-    material_resp = validate_materials(materials.keys())
+    material_resp = validate_materials(materials.keys())  # The keys of the dicionary are the material type, which needs to be validated
   if allergens:
     allergens = list(set(allergens))
-    allergens =  [str(val) for val in allergens] 
+    allergens =  [str(val) for val in allergens]  # Converting to string
     allergen_resp = validate_allergens(list(allergens))
 
-  insert_stmt = {'food': [{'ID': '','Customer' : customer, 'Family' : family }]}
+  insert_stmt = {'food': [{'ID': '','Customer' : customer, 'Family' : family }]}  # Creating sql alchemy insert format for food table
   product_tags = format_single_column_input_with_id('Tag',list(tags))
   if 'error' in product_tags:
     return {'error' : {'message' : 'tags must be a list of strings', 'code' : 422 }}
@@ -74,7 +74,7 @@ def create_food_product(name,customer,family,tags,materials,allergens):
 ##################################################################
 #                         Other Functions                        #
 ##################################################################
-def generate_api_key(product,user):
+def generate_api_key(product,user):  # Creating api key linked to user( not acutally used in this app, but hey )
   new_api_key = os.urandom(64).encode('base-64')
   try:
     db = database.mysql() 
@@ -83,7 +83,7 @@ def generate_api_key(product,user):
     return {'error' : {'message' : str(e), 'code' : 500 }}
   return {'key' : new_api_key}
 
-def validate_api_key(api_key):
+def validate_api_key(api_key):  
   try:
     db = database.mysql()
     product = db.validate_api_key(api_key)
@@ -93,8 +93,9 @@ def validate_api_key(api_key):
     return {'error' : {'message' : 'Internal server error', 'code' : 500 }}
   return {'product' : product}
 
-def get_products(product_type):
+def get_products(product_type):  # Getting products based on type passed
   tables = get_product_related_tables(product_type)
+  print(tables)
   if 'error' in tables:
     return tables
   try:
@@ -102,13 +103,36 @@ def get_products(product_type):
     products = db.get_products(product_type,tables)
   except Exception as e:
     return {'error' : {'message' : 'Internal server error', 'code' : 500 }}
+  formatted_output = format_output(products)
   response = {
     'products': products,
     'entries': len(products),
   }
   return response
 
-def get_product_related_tables(product_type):
+def format_output(products):  # Formatting data that is to be provided to the user
+  for prod in products:
+    if prod['product_materials']:
+      billOfMaterials = {}
+      for entry in prod['product_materials']: 
+        material= entry['material']
+        entry.pop('material')
+        entry['quantity'] = float(entry['quantity'])
+        billOfMaterials[material] = entry
+      prod['product_materials'] = billOfMaterials   # Changing materials format from list to dictionary
+    prod['billOfMaterials'] = prod.pop('product_materials')  # Changing the name
+
+    if prod['product_tags'] is None:
+      prod['product_tags'] = []
+    prod['tags'] = prod.pop('product_tags')
+    if 'product_allergens' in prod:
+      if prod['product_allergens'] is None:
+        prod['product_allergens'] = []
+      prod['allergens'] = prod.pop('product_allergens')
+
+  return products
+
+def get_product_related_tables(product_type):  # Getting the database tables containing data on type passed
   if product_type == "food":
     return ['product_tags','product_materials','product_allergens']
   elif product_type == "textile":
@@ -117,7 +141,7 @@ def get_product_related_tables(product_type):
     return {'error' : {'message' : 'Internal server error', 'code' : 500 }}
 
 
-def format_material_input(materials):
+def format_material_input(materials):  # Converting to sqlalchmeny insert format
   formatted_list = []
   try:
     for material in materials:
@@ -127,7 +151,7 @@ def format_material_input(materials):
     return ['error']
   return formatted_list
 
-def format_single_column_input_with_id(column,values):
+def format_single_column_input_with_id(column,values):  # Converting to sqlalchmeny insert format
   formatted_list = []
   try:
     for value in values:
@@ -137,7 +161,7 @@ def format_single_column_input_with_id(column,values):
     return ['error']
   return formatted_list 
 
-def validate_allergens(allergens):
+def validate_allergens(allergens):  # Checking existing tags to see if they exist, if not adding them to datase
   try:
     db = database.mysql()
     existing_allergens = db.get_allergens(allergens)
@@ -149,7 +173,7 @@ def validate_allergens(allergens):
     return {'error' : {'message' : 'Internal server error', 'code' : 500 }}
   return 0
 
-def validate_tags(tags):
+def validate_tags(tags):  # Checking existing tags to see if they exist, if not adding them to datase
   try:
     db = database.mysql()
     existing_tags = db.get_tags(tags)
@@ -161,7 +185,7 @@ def validate_tags(tags):
     return {'error' : {'message' : 'Internal server error', 'code' : 500 }}
   return 0
 
-def validate_materials(materials):
+def validate_materials(materials):  # Checking existing materials to see if they exist, if not adding them to datase
   try:
     db = database.mysql()
     existing_materials = db.get_materials(materials)

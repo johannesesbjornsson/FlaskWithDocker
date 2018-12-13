@@ -71,5 +71,6 @@ CREATE TABLE product_materials(
 
 INSERT INTO product_types VALUES('textile');
 INSERT INTO product_types VALUES('food');
-INSERT INTO api_keys (Api_key, Product_type, Userid) VALUES ('123', 'food','jesbjorn');
+INSERT INTO api_keys (Api_key, Product_type, Userid) VALUES ('123_food', 'food','jesbjorn');
+INSERT INTO api_keys (Api_key, Product_type, Userid) VALUES ('123_textile', 'textile','jesbjorn');
 

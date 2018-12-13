@@ -2,6 +2,7 @@ import unittest
 import os
 import sys
 from inspect import getsourcefile
+from decimal import Decimal
 
 current_path = os.path.abspath(getsourcefile(lambda:0))  # To get parent directory
 current_dir = os.path.dirname(current_path)  
@@ -187,6 +188,13 @@ class TestLogic(unittest.TestCase):
     result_2 = logic.create_textile_product('test','some_colour','some_range',tags_2,[])
     self.assertEqual(result_2,{'error': {'message': 'Internal server error', 'code': 500}})
 
+  def test_format_output(self):
+    products = [{'id': 27, 'name': 'some_name', 'family': None, 'customer': None, 'product_tags': [{'tag': 'hey'}, {'tag': 'This'}], 'product_materials': [{'material': 'ca rrots', 'quantity': Decimal('20.0'), 'unit': 'kg'}], 'product_allergens': None}]
+    resp = logic.format_output(products)
+    self.assertEqual(resp, [{'customer': None, 'allergens': [], 'name': 'some_name', 'family': None, 'tags': [{'tag': 'hey'}, {'tag': 'This'}], 'billOfMaterials': {'ca rrots': {'unit': 'kg', 'quantity': 20.0}}, 'id': 27}])
+    products_2 = [{'id': 27, 'name': 'some_name', 'colour': 'red', 'range': 'r', 'product_tags': ['tag'], 'product_materials':[] }]
+    resp_2 = logic.format_output(products_2)
+    self.assertEqual(resp_2, [{'name': 'some_name', 'tags': ['tag'], 'colour': 'red', 'range': 'r', 'billOfMaterials': [], 'id': 27}])
 
 if __name__ == '__main__':
   unittest.main()
